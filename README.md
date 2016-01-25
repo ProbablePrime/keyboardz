@@ -14,6 +14,22 @@ keyboardz.releaseKey("W");
 
 ```
 
+## Timing?
+```javascript
+var keyboardz = require('keyboardz');
+
+var key = "W";
+setTimeout(function(){
+	console.log('PUSH');
+	keyboardz.holdKey(key);
+},1000);
+
+setTimeout(function(){
+	console.log('RELEASE');
+	keyboardz.releaseKey(key);
+},5000);
+```
+
 No effort is made by this module to do syncronization or timing. Thats up to your node.js usage of it. It just sends raw global keyboard events. 
 
 If you forget to clear your keys a physical keyboard press is needed to reset them once your application closes.
