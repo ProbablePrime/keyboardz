@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
+using WindowsInput; 
+
 public enum VirtualKeys
             : ushort
         {
@@ -220,16 +222,48 @@ public class Startup
     public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags,UIntPtr dwExtraInfo);
 
     public const uint KEYEVENTF_KEYUP = 0x0002;
-    public ushort left = 0x5A;
+
+    public static VirtualKeys convertStringToKey(String key)
+    {
+        return (VirtualKeys)Enum.Parse(typeof(VirtualKeys), key, true);
+    }
+
     public async Task<object> holdKey(String key) {
-        VirtualKeys keyNum = (VirtualKeys) Enum.Parse(typeof(VirtualKeys), key, true);
-        keybd_event((byte)keyNum, 0, 0, UIntPtr.Zero);
+        keybd_event((byte)Startup.convertStringToKey(key), 0, 0, UIntPtr.Zero);
         return 0;
     }
 
     public async Task<object> releaseKey(String key) {
-        VirtualKeys keyNum = (VirtualKeys) Enum.Parse(typeof(VirtualKeys), key, true);
-        keybd_event((byte)keyNum, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        keybd_event((byte)Startup.convertStringToKey(key), 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
         return 0;
     }
+
+    //False for now
+    public static bool bExtended = false;
+    public async Task<object> sendInputDown(String key) {
+        ushort keyCode = (ushort)Startup.convertStringToKey(key);
+
+        VirtualKeyCode keyC = VirtualKeyCode.VK_D;
+        InputSimulator.SimulateKeyDown(keyC);
+        // InputSimulator.SimulateKeyDown((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyPress((VirtualKeyCode)keyCode);
+        // InputSimulator.SimulateKeyUp((VirtualKeyCode)keyCode);
+
+        return 0;
+    }
+
+    public async Task<object> sendInputUp(String key)
+    {
+        ushort keyCode  = (ushort)Startup.convertStringToKey(key);
+        InputSimulator.SimulateKeyUp((VirtualKeyCode)keyCode);
+        return 0;
+    }    
 }
